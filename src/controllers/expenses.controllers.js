@@ -4,7 +4,15 @@ import {
 } from "../repository/expenses.repository.js";
 
 const addGroupExpense = async (req, res) => {
-  const { title, amount, splitRatio, paidBy, groupId } = req.body;
+  const { title, amount, splitRatio, groupId } = req.body;
+  if (!title || !amount || !splitRatio || !groupId) {
+    return res.status(400).json({ message: "Unauthorized! Please login." });
+  }
+
+  const paidBy = req.user.user_id;
+  if (!paidBy) {
+    return res.status(400).json({ message: "Unauthorized! Please login." });
+  }
 
   const expenseData = {
     title,
@@ -17,7 +25,6 @@ const addGroupExpense = async (req, res) => {
   try {
     // Step 1: Insert the expense
     const expenseId = await addExpenseToGroup(expenseData);
-    console.log("expenseid", expenseId);
 
     // Step 2: Update the group_balance table for all members
     await updateGroupBalances(expenseData);
