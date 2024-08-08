@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./src/routes/auth.routes.js";
 import groupRoutes from "./src/routes/groups.routes.js";
+import expenseRoutes from "./src/routes/expenses.routes.js";
 
 // config
 dotenv.config();
@@ -36,6 +37,7 @@ app.get("/ping", async (req, res) => {
 // routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/groups", groupRoutes);
+app.use("/api/v1/expenses", expenseRoutes);
 
 // server port
 app.listen(process.env.PORT || 3000, () => {
