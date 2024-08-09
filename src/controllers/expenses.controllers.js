@@ -1,5 +1,6 @@
 import {
   addExpenseToGroup,
+  getBalanceByGroup,
   updateGroupBalances,
 } from "../repository/expenses.repository.js";
 
@@ -37,4 +38,23 @@ const addGroupExpense = async (req, res) => {
   }
 };
 
-export { addGroupExpense };
+const getGroupMembersBalance = async (req, res) => {
+  const { groupId } = req.body;
+  if (!groupId) {
+    return res.status(400).json({ message: "Group Id is required." });
+  }
+
+  const userId = req.user.user_id;
+  if (!userId) {
+    return res.status(400).json({ message: "Unauthorized! Please login." });
+  }
+
+  try {
+    const expenses = await getBalanceByGroup(groupId, userId);
+    res.status(200).json({ expenses });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export { addGroupExpense, getGroupMembersBalance };

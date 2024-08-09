@@ -34,7 +34,7 @@ export const updateGroupBalances = async (expenseData) => {
 
     // The person who owes
     await getPool().query(
-      `UPDATE groupbalance 
+      `UPDATE usersgroupsmapping 
         SET balance = balance - $1 
          WHERE user_id = $2 AND group_id = $3`,
       [individualShare, userId, expenseData.groupId]
@@ -42,10 +42,16 @@ export const updateGroupBalances = async (expenseData) => {
 
     // The person who paid (positive balance means they are owed money)
     await getPool().query(
-      `UPDATE groupbalance 
+      `UPDATE usersgroupsmapping 
          SET balance = balance + $1 
          WHERE user_id = $2 AND group_id = $3`,
       [individualShare, expenseData.paidBy, expenseData.groupId]
     );
   }
+};
+
+export const getBalanceByGroup = async (groupId, userId) => {
+  const query = `select u.name, gb.balance FROM usersgroupsmapping gb JOIN users u ON gb.user_id = u.user_id WHERE gb.group_id = $1 and u.user_id =$2`;
+  const { rows } = await getPool().query(query, [groupId, userId]);
+  return rows;
 };
