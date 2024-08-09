@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import {
   addUserToGroup,
   createGroup,
@@ -19,6 +20,7 @@ const createExpenseGroup = async (req, res) => {
   }
 
   const groupData = {
+    groupId: nanoid(),
     name,
     type,
     userId,
@@ -119,7 +121,7 @@ const editExpenseGroup = async (req, res) => {
 
   try {
     await updateGroupDetails(groupData);
-    res.status(200).json({ message: "User successfully left group members" });
+    res.status(200).json({ message: "Group edited successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -131,5 +133,5 @@ export {
   inviteUserToGroup,
   listGroupMembers,
   leaveExpenseGroup,
-  editExpenseGroup
+  editExpenseGroup,
 };

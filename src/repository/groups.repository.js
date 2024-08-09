@@ -7,8 +7,13 @@ export const createGroup = async (groupData) => {
     // Begin Transaction
     client.query("BEGIN");
     let query =
-      "INSERT INTO groups (name, type, created_by) VALUES ($1, $2, $3) RETURNING *";
-    const values = [groupData.name, groupData.type, groupData.userId];
+      "INSERT INTO groups (group_id, name, type, created_by) VALUES ($1, $2, $3, $4) RETURNING *";
+    const values = [
+      groupData.groupId,
+      groupData.name,
+      groupData.type,
+      groupData.userId,
+    ];
 
     const group = await client.query(query, values);
 

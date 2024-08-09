@@ -1,6 +1,8 @@
+import { nanoid } from "nanoid";
 import {
   addExpenseToGroup,
   getBalanceByGroup,
+  getGroupExpenses,
   updateGroupBalances,
 } from "../repository/expenses.repository.js";
 
@@ -16,6 +18,7 @@ const addGroupExpense = async (req, res) => {
   }
 
   const expenseData = {
+    expenseId: nanoid(),
     title,
     amount,
     splitRatio,
@@ -57,4 +60,18 @@ const getGroupMembersBalance = async (req, res) => {
   }
 };
 
-export { addGroupExpense, getGroupMembersBalance };
+const listGroupExpenses = async (req, res) => {
+  const { groupId } = req.body;
+  if (!groupId) {
+    return res.status(400).json({ message: "Group Id is required." });
+  }
+
+  try {
+    const expenses = await getGroupExpenses(groupId);
+    res.status(200).json({ expenses });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export { addGroupExpense, getGroupMembersBalance, listGroupExpenses };

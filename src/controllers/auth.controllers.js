@@ -1,4 +1,5 @@
 import bycrypt from "bcryptjs";
+import { nanoid } from "nanoid";
 import { createUser, getUserByEmail } from "../repository/auth.repository.js";
 import { generateToken } from "../utils/auth.utils.js";
 
@@ -7,7 +8,9 @@ const SignUp = async (req, res) => {
   if (!name || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
   }
+
   const userData = {
+    userId: nanoid(),
     name,
     email,
     password,

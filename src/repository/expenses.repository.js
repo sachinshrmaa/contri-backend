@@ -1,9 +1,10 @@
 import { getPool } from "../db/postgres.js";
 
 export const addExpenseToGroup = async (expenseData) => {
-  const query = `INSERT INTO expenses (title, amount, split_ratio, paid_by, group_id) VALUES ($1, $2, $3, $4, $5) RETURNING expense_id
+  const query = `INSERT INTO expenses (expense_id, title, amount, split_ratio, paid_by, group_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING expense_id
 `;
   const values = [
+    expenseData.expenseId,
     expenseData.title,
     expenseData.amount,
     expenseData.splitRatio,
@@ -53,5 +54,11 @@ export const updateGroupBalances = async (expenseData) => {
 export const getBalanceByGroup = async (groupId, userId) => {
   const query = `select u.name, gb.balance FROM usersgroupsmapping gb JOIN users u ON gb.user_id = u.user_id WHERE gb.group_id = $1 and u.user_id =$2`;
   const { rows } = await getPool().query(query, [groupId, userId]);
+  return rows;
+};
+
+export const getGroupExpenses = async (groupId) => {
+  const query = `select e.expense_id, u.name, e.title, e.amount, e.created_at  from expenses e join users u on e.paid_by = u.user_id where e.group_id = $1`;
+  const { rows } = await getPool().query(query, [groupId]);
   return rows;
 };

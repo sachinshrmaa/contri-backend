@@ -25,9 +25,15 @@ export const getUserById = async (userId) => {
 };
 
 export const createUser = async (userData) => {
-  const query = "INSERT INTO Users (name, email, password) VALUES ($1, $2, $3)";
+  const query =
+    "INSERT INTO Users (user_id, name, email, password) VALUES ($1, $2, $3, $4)";
 
-  const values = [userData.name, userData.email, userData.password];
+  const values = [
+    userData.userId,
+    userData.name,
+    userData.email,
+    userData.password,
+  ];
 
   const { rows } = await getPool().query(query, values);
   return rows[0];
