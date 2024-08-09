@@ -9,6 +9,7 @@ import {
   listGroupMembers,
   listUserGroups,
 } from "../controllers/groups.controllers.js";
+import { sendGroupInvite } from "../controllers/expenses.controllers.js";
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.get("/join-group/:id", requireAuth, inviteUserToGroup);
 router.post("/list-members", requireAuth, listGroupMembers);
 router.post("/leave-group", requireAuth, leaveExpenseGroup);
 router.post("/edit-group/:id", requireAuth, editExpenseGroup);
+router.post("/send-invite", requireAuth, sendGroupInvite);
 
 export default router;
