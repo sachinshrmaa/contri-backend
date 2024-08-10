@@ -15,7 +15,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 // CORS middleware
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://contri-beta.vercel.app",
+  "https://contri.sachinbuilds.in",
+];
 
 // CORS options
 const corsOptions = {

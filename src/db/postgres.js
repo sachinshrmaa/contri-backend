@@ -7,16 +7,16 @@ const getPool = () => {
   if (pool) return pool;
 
   pool = new Pool({
-    host: process.env.DB_HOST || "localhost",
-    user: process.env.DB_USER || "sachin",
-    password: process.env.DB_PASSWORD || "root123",
-    database: process.env.DB_DATABASE || "contri",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
     max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
-    // ssl: {
-    //   mode: "require",
-    // },
+    ssl: {
+      mode: "require",
+    },
   });
 
   pool = pool;
