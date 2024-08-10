@@ -80,3 +80,9 @@ export const updateGroupDetails = async (groupData) => {
   const { rows } = await getPool().query(query, values);
   return rows;
 };
+
+export const getGroupDetails = async (groupId) => {
+  const query = `select group_id, type, name, created_by, created_at from "groups" where group_id = $1`;
+  const { rows } = await getPool().query(query, [groupId]);
+  return rows[0];
+};

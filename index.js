@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./src/routes/auth.routes.js";
 import groupRoutes from "./src/routes/groups.routes.js";
 import expenseRoutes from "./src/routes/expenses.routes.js";
+import activityRoues from "./src/routes/activity.routes.js";
 
 // config
 dotenv.config();
@@ -14,7 +15,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // CORS middleware
-const allowedOrigins = ["http://localhost:3001"];
+const allowedOrigins = ["http://localhost:3000"];
 
 // CORS options
 const corsOptions = {
@@ -38,8 +39,9 @@ app.get("/ping", async (req, res) => {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/groups", groupRoutes);
 app.use("/api/v1/expenses", expenseRoutes);
+app.use("/api/v1/activities", activityRoues);
 
 // server port
-app.listen(process.env.PORT || 3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
 });

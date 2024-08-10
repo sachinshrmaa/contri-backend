@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import {
   addExpenseToGroup,
+  getAllUsersByGroupBalance,
   getBalanceByGroup,
   getGroupExpenses,
   updateGroupBalances,
@@ -55,7 +56,21 @@ const getGroupMembersBalance = async (req, res) => {
 
   try {
     const expenses = await getBalanceByGroup(groupId, userId);
-    res.status(200).json({ expenses });
+    res.status(200).json(expenses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const listAllMembersGroupBalance = async (req, res) => {
+  const { groupId } = req.body;
+  if (!groupId) {
+    return res.status(400).json({ message: "Group Id is required." });
+  }
+
+  try {
+    const expenses = await getAllUsersByGroupBalance(groupId);
+    res.status(200).json(expenses);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -111,4 +126,5 @@ export {
   getGroupMembersBalance,
   listGroupExpenses,
   sendGroupInvite,
+  listAllMembersGroupBalance,
 };

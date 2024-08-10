@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import {
   addUserToGroup,
   createGroup,
+  getGroupDetails,
   getGroupMembers,
   getGroupsByUser,
   removeUserFromGroup,
@@ -127,6 +128,20 @@ const editExpenseGroup = async (req, res) => {
   }
 };
 
+const listGroupDetails = async (req, res) => {
+  const { groupId } = req.body;
+  if (!groupId) {
+    return res.status(400).json({ message: "Group Id is required." });
+  }
+
+  try {
+    const group = await getGroupDetails(groupId);
+    res.status(200).json(group);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export {
   createExpenseGroup,
   listUserGroups,
@@ -134,4 +149,5 @@ export {
   listGroupMembers,
   leaveExpenseGroup,
   editExpenseGroup,
+  listGroupDetails,
 };

@@ -6,6 +6,7 @@ import {
   editExpenseGroup,
   inviteUserToGroup,
   leaveExpenseGroup,
+  listGroupDetails,
   listGroupMembers,
   listUserGroups,
 } from "../controllers/groups.controllers.js";
@@ -20,5 +21,6 @@ router.post("/list-members", requireAuth, listGroupMembers);
 router.post("/leave-group", requireAuth, leaveExpenseGroup);
 router.post("/edit-group/:id", requireAuth, editExpenseGroup);
 router.post("/send-invite", requireAuth, sendGroupInvite);
+router.post("/get-details", requireAuth, listGroupDetails);
 
 export default router;

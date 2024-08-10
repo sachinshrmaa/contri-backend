@@ -54,6 +54,12 @@ export const updateGroupBalances = async (expenseData) => {
 export const getBalanceByGroup = async (groupId, userId) => {
   const query = `select u.name, gb.balance FROM usersgroupsmapping gb JOIN users u ON gb.user_id = u.user_id WHERE gb.group_id = $1 and u.user_id =$2`;
   const { rows } = await getPool().query(query, [groupId, userId]);
+  return rows[0];
+};
+
+export const getAllUsersByGroupBalance = async (groupId) => {
+  const query = `select u.name, gb.balance FROM usersgroupsmapping gb JOIN users u ON gb.user_id = u.user_id WHERE gb.group_id = $1`;
+  const { rows } = await getPool().query(query, [groupId]);
   return rows;
 };
 
