@@ -4,6 +4,8 @@ import {
   createUser,
   deactivateUserProfile,
   getUserByEmail,
+  getUserById,
+  updateUserProfile,
 } from "../repository/auth.repository.js";
 import { generateToken } from "../utils/auth.utils.js";
 
@@ -91,4 +93,51 @@ const deactivateUserAccount = async (req, res) => {
   }
 };
 
-export { SignUp, LogIn, LogOut, deactivateUserAccount };
+const updateUserAccount = async (req, res) => {
+  const userId = req.user.user_id;
+  const { name, email, password, newPassword } = req.body;
+
+  let user;
+
+  if (!userId) {
+    return res.status(400).json({ message: "Please login." });
+  } else {
+    try {
+      user = await getUserById(userId);
+    } catch (error) {
+      console.log("Failed to fetch user:", error);
+      return res.status(500).json({ message: error.message });
+    }
+
+    if (user === null) {
+      return res.status(400).json({ message: "User does not exists" });
+    }
+
+    if (user.is_active === false) {
+      return res.status(400).json({ message: "User is not active" });
+    }
+  }
+
+  const userData = {
+    name,
+    email,
+    newPassword,
+  };
+
+  if (newPassword && password) {
+    if (!bycrypt.compareSync(password, user.password)) {
+      return res.status(400).json({ message: "Incorrect password" });
+    } else {
+      userData.newPassword = bycrypt.hashSync(newPassword, 10);
+    }
+  }
+
+  try {
+    await updateUserProfile(userId, userData);
+    res.status(200).json({ message: "User profile successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export { SignUp, LogIn, LogOut, deactivateUserAccount, updateUserAccount };

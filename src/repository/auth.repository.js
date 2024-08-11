@@ -44,3 +44,38 @@ export const deactivateUserProfile = async (userId) => {
   const { rows } = await getPool().query(query, [userId]);
   return rows[0];
 };
+
+export const updateUserProfile = async (userId, userData) => {
+  const fields = [];
+  const values = [];
+  let query = "UPDATE users SET ";
+
+  // Track the parameter index
+  let paramIndex = 1;
+
+  // Add provided fields to the query
+  if (userData.name) {
+    fields.push(`name = $${paramIndex++}`);
+    values.push(userData.name);
+  }
+  if (userData.email) {
+    fields.push(`email = $${paramIndex++}`);
+    values.push(userData.email);
+  }
+  if (userData.newPassword) {
+    // If updating password, consider hashing it before storing
+    fields.push(`password = $${paramIndex++}`);
+    values.push(userData.newPassword); // Ensure password is hashed if needed
+  }
+
+  if (fields.length === 0) {
+    throw new Error("No fields to update");
+  }
+
+  // Join the fields and add the WHERE clause
+  query += fields.join(", ") + ` WHERE user_id = $${paramIndex}`;
+  values.push(userId);
+
+  const { rows } = await getPool().query(query, values);
+  return rows[0];
+};
