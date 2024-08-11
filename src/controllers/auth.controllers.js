@@ -1,6 +1,10 @@
 import bycrypt from "bcryptjs";
 import { nanoid } from "nanoid";
-import { createUser, getUserByEmail } from "../repository/auth.repository.js";
+import {
+  createUser,
+  deactivateUserProfile,
+  getUserByEmail,
+} from "../repository/auth.repository.js";
 import { generateToken } from "../utils/auth.utils.js";
 
 const SignUp = async (req, res) => {
@@ -49,6 +53,10 @@ const LogIn = async (req, res) => {
     return res.status(400).json({ message: "User does not exists" });
   }
 
+  if (user.is_active === false) {
+    return res.status(400).json({ message: "User is not active" });
+  }
+
   if (!bycrypt.compareSync(password, user.password)) {
     return res.status(400).json({ message: "Invalid credentials" });
   } else {
@@ -69,4 +77,18 @@ const LogOut = async (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-export { SignUp, LogIn, LogOut };
+const deactivateUserAccount = async (req, res) => {
+  const userId = req.user.user_id;
+  if (!userId) {
+    return res.status(400).json({ message: "Please login." });
+  }
+
+  try {
+    await deactivateUserProfile(userId);
+    res.status(200).json({ message: "User deactivated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export { SignUp, LogIn, LogOut, deactivateUserAccount };

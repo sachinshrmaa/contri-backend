@@ -38,3 +38,9 @@ export const createUser = async (userData) => {
   const { rows } = await getPool().query(query, values);
   return rows[0];
 };
+
+export const deactivateUserProfile = async (userId) => {
+  const query = "update users set is_active = false where user_id = $1";
+  const { rows } = await getPool().query(query, [userId]);
+  return rows[0];
+};
