@@ -95,7 +95,7 @@ const deactivateUserAccount = async (req, res) => {
 
 const updateUserAccount = async (req, res) => {
   const userId = req.user.user_id;
-  const { name, email, password, newPassword } = req.body;
+  const { name, email, currentPassword, newPassword } = req.body;
 
   let user;
 
@@ -124,8 +124,8 @@ const updateUserAccount = async (req, res) => {
     newPassword,
   };
 
-  if (newPassword && password) {
-    if (!bycrypt.compareSync(password, user.password)) {
+  if (newPassword && currentPassword) {
+    if (!bycrypt.compareSync(currentPassword, user.password)) {
       return res.status(400).json({ message: "Incorrect password" });
     } else {
       userData.newPassword = bycrypt.hashSync(newPassword, 10);
